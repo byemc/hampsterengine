@@ -1,6 +1,6 @@
 export default class Canvas {
     constructor(canvas) {
-        this.canvas = document.getElementById('canvas');
+        this.canvas = document.getElementById(canvas);
         this.ctx = this.canvas.getContext('2d');
         this.pixelRatio = window.devicePixelRatio || 1;
     }

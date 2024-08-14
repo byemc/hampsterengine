@@ -144,8 +144,7 @@ class Engine {
         // this.canvas.drawImage(image,
         //     this.canvas.center.x - (image.width/2), this.canvas.center.y - (image.height/2),
         //     image.width, image.height, 5);
-
-        this.canvas.drawImageFromCenter(image,
+        if (image) this.canvas.drawImageFromCenter(image,
             this.canvas.center.x, this.canvas.center.y,
             image.width, image.height, 5);
 
