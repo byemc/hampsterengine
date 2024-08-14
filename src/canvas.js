@@ -1,16 +1,24 @@
 export default class Canvas {
     constructor(canvas) {
         this.canvas = document.getElementById(canvas);
-        this.ctx = this.canvas.getContext('2d');
+        this.ctx = this.canvas.getContext('2d', {alpha: false});
         this.pixelRatio = window.devicePixelRatio || 1;
     }
 
     get height() {
         return this.canvas.height / this.pixelRatio;
     }
+    
+    set height(h) {
+        this.canvas.height = h;
+    }
 
     get width() {
         return this.canvas.width / this.pixelRatio;
+    }
+    
+    set width(w) {
+        this.canvas.width = w;
     }
 
     get center() {

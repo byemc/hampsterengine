@@ -1,5 +1,6 @@
 
 import AssetStore from "./assetStore.js";
+import splash from "../img/splash_hampster.webp";
 
 class Engine {
     constructor(canvas, registerCanvasToWindow=true) {
@@ -9,6 +10,7 @@ class Engine {
             window.canvas = canvas
         }
         this.assetStore = new AssetStore();
+        this.setSplash(splash);
         this.loading = true;
 
         this.rooms = [];
@@ -136,7 +138,7 @@ class Engine {
     }
 
     loadLoop() {
-        this.canvas.updateCanvasSize();
+        // this.canvas.updateCanvasSize();
 
         this.canvas.fill("#222034");
 
