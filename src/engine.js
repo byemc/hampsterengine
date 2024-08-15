@@ -28,6 +28,10 @@ class Engine {
             x: 0, y: 0
         }
 
+        this.lastClickPos = {
+            x:0, y:0
+        }
+
         // Update realMousePos so the game devs don't have to
         document.addEventListener('mousemove', e => {
             this.realMousePos.x = e.clientX;
@@ -41,9 +45,33 @@ class Engine {
 
     set room(index) {
         this.currentRoomIndex = index;
-        if (this.currentRoomIndex) this.rooms[index].start();
+        if (this.currentRoomIndex !== undefined) this.rooms[index].start();
         else {
             throw Error('Room doesn\'t exist');
+        }
+    }
+
+    get overflow() {
+        // Returns the overflow relative to the canvas (e.g.,
+        // if the resolution of the canvas is 640x480, it'll be relative to that)
+
+        const bounding = this.canvas.canvas.getBoundingClientRect();
+        const ratio = this.canvas.width / this.canvas.height;
+        const boundingRatio = bounding.width / bounding.height;
+
+        // this.canvas.drawText(ratio, 0, canvas.height, {})
+        // this.canvas.drawText(boundingRatio, 0, canvas.height-8, {})
+
+        let w = 0;
+        let h = 0;
+
+        if (boundingRatio > ratio) {
+            const hRatio = bounding.height / canvas.height;
+            w = bounding.width - (canvas.width*hRatio);
+        }
+
+        return {
+            w, h
         }
     }
 
@@ -63,41 +91,17 @@ class Engine {
         throw Error('That room doesn\'t exist');
     }
 
-    get hoveringOver() {
-        // The first object will be the one at the front of the screen.
-        const things = this.room.things;
-        const hovered_things = [];
-
-        for (let thing of things) {
-            // if the mouse position is more than x, less than (x + width),
-            //                      more than y, or less than (y + height)
-            if (
-                this.mouse.x >= thing.x &&
-                this.mouse.x <= thing.x + thing.width &&
-                this.mouse.y >= thing.y &&
-                this.mouse.y <= thing.y + thing.height
-            ) {
-                // Then:
-                hovered_things.unshift(thing);
-            }
-        }
-
-        return hovered_things;
-    }
-
-    click() {
-        this.hoveringOver[0].click();
-    }
-
     get mouse() {
         // Gets the mouse position in the game.
         // Must take into account pixel ratios, panning and zooming
 
         const bounding = this.canvas.canvas.getBoundingClientRect();
 
+        const overflow = this.overflow;
+
         return {
-            x: (this.realMousePos.x - bounding.left),
-            y: (this.realMousePos.y - bounding.top)
+            x: ((this.realMousePos.x - (overflow.w /2)) / (bounding.width - overflow.w)) * canvas.width,
+            y: ((this.realMousePos.y - (overflow.h /2)) / (bounding.height - overflow.h)) * canvas.height
         }
     }
 

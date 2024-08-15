@@ -11,9 +11,19 @@ class Thing {
     }
 
     set sprite(image) {
+        if (typeof image === "string") {
+            let img = new Image();
+            img.src = image;
+            image = img;
+        }
+
         this.spriteImage = image;
         this.width = image.width;
         this.height = image.height;
+    }
+
+    get sprite() {
+        return this.spriteImage;
     }
 
     step () {
@@ -21,6 +31,16 @@ class Thing {
 
     draw() {
         canvas.drawImage(this.sprite, this.x, this.y, this.sprite.width, this.sprite.height, 1);
+    }
+
+    mousedown() {}
+
+    mouseup() {
+        // Only called when the mouse is released
+    }
+
+    mouseupOffThing() {
+        // ALWAYS called when the mouse is released
     }
 
 }

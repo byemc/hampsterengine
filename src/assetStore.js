@@ -36,6 +36,16 @@ class AssetStore {
         return audio;
     }
 
+    addSoundBoxAudio(key, song, sb) {
+        // song: soundbox JS file.
+        // sb: Soundbox function (not included. byosb)
+
+
+
+        // Create audio element.
+        const audio = new Audio();
+    }
+
     addImage(key, url) {
         const image = new Image();
         image.src = url;

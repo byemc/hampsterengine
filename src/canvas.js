@@ -43,6 +43,10 @@ export default class Canvas {
         this.ctx.fillStyle = color;
     }
 
+    setStrokeColor(color=this.ctx.strokeStyle) {
+        this.ctx.strokeStyle = color;
+    }
+
     fill(color) {
         this.ctx.fillStyle = color;
         this.ctx.fillRect(0, 0, this.width, this.height)
@@ -60,7 +64,7 @@ export default class Canvas {
         ctx.stroke();
     }
 
-    drawText(text, x, y, {maxWidth = 0, textAlign = "start", textBaseline = "alphabetic", font = "16px sans-serif"}) {
+    drawText(text, x, y, {maxWidth = 0, textAlign = "start", textBaseline = "alphabetic", font = "8px sans-serif"}) {
         this.ctx.textAlign = textAlign;
         this.ctx.textBaseline = textBaseline;
         this.ctx.font = font;
@@ -70,13 +74,13 @@ export default class Canvas {
     }
 
 
-    drawImage(image, x, y, w, h, scale=1) {
-        this.ctx.save();
-        this.ctx.setTransform(1, 0, 0, 1, 0, 0);
-        this.ctx.scale(this.pixelRatio * scale, this.pixelRatio * scale);
-        this.ctx.translate((x/scale), y/scale);
+    drawImage(image, x, y, w, h) {
         this.ctx.drawImage(image, 0, 0, w, h);
-        this.ctx.restore();
+    }
+
+    sliceImage(image, x, y, w, h, sx, sy, sw, sh) {
+        // Image, X, Y, Width, Height, Source X, Source y, Source Width, Source Height
+        this.ctx.drawImage(image, sx, sy, sw, sh, x, y, w, h);
     }
 
 
