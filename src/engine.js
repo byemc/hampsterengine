@@ -12,6 +12,7 @@ class Engine {
         this.assetStore = new AssetStore();
         this.setSplash(splash);
         this.loading = true;
+        this.running = true;
 
         this.rooms = [];
         this.roomTable = {};
@@ -40,7 +41,10 @@ class Engine {
 
     set room(index) {
         this.currentRoomIndex = index;
-        this.rooms[index].start()
+        if (this.currentRoomIndex) this.rooms[index].start();
+        else {
+            throw Error('Room doesn\'t exist');
+        }
     }
 
     registerRoom(room, name) {
