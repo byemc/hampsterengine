@@ -12,6 +12,7 @@ class Engine {
         this.assetStore = new AssetStore();
         this.setSplash(splash);
         this.loading = true;
+        this.loadDelay = 1000;
         this.running = true;
 
         this.rooms = [];
@@ -24,6 +25,12 @@ class Engine {
             scale: 1
         }
 
+        this.mouseDown = false;
+        this.mouseDownStart = new Date();
+        this.mouseDownPos = {
+            x: 0, y: 0
+        }
+
         this.realMousePos = {
             x: 0, y: 0
         }
@@ -33,10 +40,62 @@ class Engine {
         }
 
         // Update realMousePos so the game devs don't have to
-        document.addEventListener('mousemove', e => {
+        this.canvas.canvas.addEventListener('mousemove', e => {
             this.realMousePos.x = e.clientX;
             this.realMousePos.y = e.clientY;
+        });
+
+        this.canvas.canvas.addEventListener('mousedown', e => {
+            const mouse = this.mouse;
+            this.mouseDown = true;
+            this.mouseDownPos.x = mouse.x;
+            this.mouseDownPos.y = mouse.y;
+
+            let hovered = this.hovered;
+            if (hovered) hovered[0].mousedown();
+        });
+
+        this.canvas.canvas.addEventListener('mouseup', e => {
+            const mouse = this.mouse;
+            this.mouseDown = false;
+            this.lastClickPos.x = mouse.x;
+            this.lastClickPos.y = mouse.y;
+
+            // Tell everything previously clicked about the mouseup event
+            for (let thing of this.room.things) if (thing.clicked) thing.mouseupOffThing();
+
+            // Tell whatever is being hovered over about it too
+            let hovered = this.hovered;
+            if (hovered) hovered[0].mouseup()
         })
+    }
+
+    get hovered() {
+        // Get a list of things in the current room
+        const things = this.room.things;
+        if (!things) return [];
+
+        let hovered = [];
+
+        const mouse = this.mouse;
+
+        // Loop through everything in the room.
+        for (let thing of things) {
+            // Check if the cursor is within the length and width of this thing
+            if (
+                mouse.x >= thing.x &&       // X more than the left edge,
+                mouse.x <= thing.x + thing.width &&   // X less than the right edge,
+                mouse.y >= thing.y &&       // Y more than top edge,
+                mouse.y <= thing.y + thing.height     // Y less than bottom edge.
+            ) {
+                // Then we're colliding!
+                hovered.unshift(thing);
+            }
+        }
+
+        console.log(hovered);
+
+        return hovered;
     }
 
     get room() {
@@ -105,6 +164,8 @@ class Engine {
         }
     }
 
+
+
     step() {
         this.room.step();
     }
@@ -156,21 +217,23 @@ class Engine {
         //     image.width, image.height, 5);
         if (image) this.canvas.drawImageFromCenter(image,
             this.canvas.center.x, this.canvas.center.y,
-            image.width, image.height, 5);
+            image.width, image.height, 1);
 
         this.canvas.setFillColor('white');
         if (this.assetStore.loaded === this.assetStore.size) {
             // this.canvas.drawText('LOADED', 10, this.canvas.height - 10, {})
             setTimeout(_=>{
                 this.loading = false;
-            }, 500)
+            }, this.loadDelay)
         }
 
         if (this.assetStore.loadMessages.length >= 1) {
             this.canvas.setFillColor('white');
             for (let i = 0; i < this.assetStore.loadMessages.length; i++) {
                 if (this.assetStore.loadMessages[i].error) this.canvas.setFillColor('red');
-                this.canvas.drawText(this.assetStore.loadMessages[i].message, 10, (this.canvas.height - 10) - (i*16), {})
+                this.canvas.drawText(this.assetStore.loadMessages[i].message, 0, (i*16), {
+                    textBaseline: 'top'
+                })
             }
         }
     }

@@ -47,9 +47,11 @@ export default class Canvas {
         this.ctx.strokeStyle = color;
     }
 
-    fill(color) {
+    fill(color=this.ctx.fillStyle) {
+        const oldColour = this.ctx.fillStyle;
         this.ctx.fillStyle = color;
-        this.ctx.fillRect(0, 0, this.width, this.height)
+        this.ctx.fillRect(0, 0, this.width, this.height);
+        this.ctx.fillStyle = oldColour;
     }
 
     fillRect(x, y, w, h) {

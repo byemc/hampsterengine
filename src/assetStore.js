@@ -40,10 +40,33 @@ class AssetStore {
         // song: soundbox JS file.
         // sb: Soundbox function (not included. byosb)
 
+        // Init song
+        sb.init(song);
+        const t0 = new Date();
+        let done = false;
 
-
-        // Create audio element.
         const audio = new Audio();
+        this.addElement(key, audio);
+
+        const interval = setInterval(_=>{
+            if (done) {
+                clearInterval(interval);
+                return;
+            }
+
+            done = sb.generate() >= 1;
+
+            if (done) {
+                const t1 = new Date();
+
+                const wave = sb.createWave();
+                audio.src = URL.createObjectURL(new Blob([wave], {type: 'audio/wav'}));
+                this.loaded++;
+                this.loadMessages.push({
+                    message: `Generated ${key} in ${t1-t0} ms`
+                });
+            }
+        });
     }
 
     addImage(key, url) {
@@ -53,14 +76,14 @@ class AssetStore {
         image.onload = () => {
             this.loaded++
             this.loadMessages.push({
-                message: image.src + ' loaded.'
+                message: key + ' loaded.'
             })
             console.debug(image, 'loaded.', this.loaded, this.size)
         };
         image.onerror = (e) => {
             console.error(e)
             this.loadMessages.push({
-                message: image.src + ' failed to load.',
+                message: key + ' failed to load.',
                 error: true
             })
         }
