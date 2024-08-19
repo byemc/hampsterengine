@@ -48,6 +48,10 @@ class Engine {
         });
 
         this.canvas.canvas.addEventListener('mousedown', e => {
+            // Only accept primary mouse button clicks
+            // Otherwise middle, right, back and forward mouse buttons will be accepted too.
+            if (e.button !== 0) return;
+
             const mouse = this.mouse;
             this.mouseDown = true;
             this.mouseDownPos.x = mouse.x;
@@ -58,6 +62,8 @@ class Engine {
         });
 
         this.canvas.canvas.addEventListener('mouseup', e => {
+            if (e.button !== 0) return;
+
             const mouse = this.mouse;
             this.mouseDown = false;
             this.lastClickPos.x = mouse.x;
