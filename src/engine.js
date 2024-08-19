@@ -15,6 +15,8 @@ class Engine {
         this.loadDelay = 1000;
         this.running = true;
 
+        this.frames = 0;
+
         this.rooms = [];
         this.roomTable = {};
         window.roomTable = this.roomTable;
@@ -66,7 +68,7 @@ class Engine {
 
             // Tell whatever is being hovered over about it too
             let hovered = this.hovered;
-            if (hovered) hovered[0].mouseup()
+            if (hovered) hovered[0].mouseup();
         })
     }
 

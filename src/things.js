@@ -48,6 +48,7 @@ class Thing {
 class Room {
     constructor() {
         this.things = [];
+        this.bgColor = 'white';
     }
 
     start() {
