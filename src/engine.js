@@ -70,7 +70,7 @@ class Engine {
             this.lastClickPos.y = mouse.y;
 
             // Tell everything previously clicked about the mouseup event
-            for (let thing of this.room.things) if (thing.clicked) thing.mouseupOffThing();
+            for (let thing of this.room.entities) if (thing.clicked) thing.mouseupOffThing();
 
             // Tell whatever is being hovered over about it too
             let hovered = this.hovered;
@@ -80,7 +80,7 @@ class Engine {
 
     get hovered() {
         // Get a list of things in the current room
-        const things = this.room.things;
+        const things = this.room.entities;
         if (!things) return [];
 
         let hovered = [];
@@ -111,6 +111,7 @@ class Engine {
     }
 
     set room(index) {
+        this.room.stop();
         this.currentRoomIndex = index;
         if (this.currentRoomIndex !== undefined) this.rooms[index].start();
         else {

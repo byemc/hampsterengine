@@ -1,7 +1,7 @@
 export default class Canvas {
     constructor(canvas) {
         this.canvas = document.getElementById(canvas);
-        this.ctx = this.canvas.getContext('2d', {alpha: false});
+        this.ctx = this.canvas.getContext`2d`;
         this.pixelRatio = window.devicePixelRatio || 1;
     }
 
@@ -77,7 +77,7 @@ export default class Canvas {
 
 
     drawImage(image, x, y, w, h) {
-        this.ctx.drawImage(image, 0, 0, w, h);
+        this.ctx.drawImage(image, x, y, w, h);
     }
 
     sliceImage(image, x, y, w, h, sx, sy, sw, sh) {

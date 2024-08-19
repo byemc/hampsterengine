@@ -1,5 +1,5 @@
 
-class Thing {
+class Entity {
     // Base object class. Can't call it `object` because it conflicts with the `Object` class.
 
     constructor() {
@@ -33,6 +33,9 @@ class Thing {
         canvas.drawImage(this.sprite, this.x, this.y, this.sprite.width, this.sprite.height, 1);
     }
 
+    physicsTick() {
+    }
+
     mousedown() {}
 
     mouseup() {
@@ -45,26 +48,30 @@ class Thing {
 
 }
 
+// Physics constants
+Entity.KINEMATIC = 'kinematic';
+Entity.DYNAMIC = 'dynamic';
+
 class Room {
     constructor() {
-        this.things = [];
+        this.entities = [];
         this.bgColor = 'white';
     }
 
     start() {
     }
 
-    end() {
+    stop() {
     }
 
     step() {
-        for (let thing of this.things) {
+        for (let thing of this.entities) {
             thing.draw();
         }
     }
 
     draw() {
-        for (let thing of this.things) {
+        for (let thing of this.entities) {
             thing.draw();
         }
     }
@@ -73,4 +80,4 @@ class Room {
     }
 }
 
-export {Room, Thing};
+export {Room, Entity};
