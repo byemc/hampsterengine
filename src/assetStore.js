@@ -3,7 +3,7 @@ class AssetStore {
     constructor() {
         this.assets = {};
         this.loaded = 0;
-        this.loadMessages = []
+        this.loadMessages = [];
     }
 
     get size() {
@@ -89,6 +89,16 @@ class AssetStore {
         }
 
         return image;
+    }
+
+    addMiniSprite(key, sprite, size=8) {
+        this.assets[key] = {
+            sprite, size
+        };
+
+        this.loadMessages.push({
+            message: key + ' loaded.'
+        })
     }
 
     get(key) {

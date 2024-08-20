@@ -66,13 +66,23 @@ export default class Canvas {
         ctx.stroke();
     }
 
-    drawText(text, x, y, {maxWidth = 0, textAlign = "start", textBaseline = "alphabetic", font = "8px sans-serif"}) {
+    drawText(text, x, y, {maxWidth = 0, textAlign = "start", textBaseline = "alphabetic", size=8, font = "sans-serif"}) {
         this.ctx.textAlign = textAlign;
         this.ctx.textBaseline = textBaseline;
-        this.ctx.font = font;
+        this.ctx.font = `${size}px ${font}`;
 
-        if (maxWidth===0) this.ctx.fillText(text, x, y);
-        else this.ctx.fillText(text, x, y, maxWidth);
+        let lines = []
+        // Split the text into lines
+        try {
+            lines = text.split(/\n/);
+        } catch (e) {
+            lines = [text];
+        }
+
+        for (let i = 0; i < lines.length; i++) {
+            if (maxWidth===0) this.ctx.fillText(text, x, y+(i*size));
+            else this.ctx.fillText(lines[i], x, y+(i*size), maxWidth);
+        }
     }
 
 
