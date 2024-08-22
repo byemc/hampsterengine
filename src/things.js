@@ -1,15 +1,4 @@
-
-var Collision = {
-    elastic: function (resitution) {
-        this.resitution = resitution || .2;
-    },
-
-    displace: function () {
-        this.resitution = 0;
-    }
-};
-
-const abs = Math.abs;
+const round = Math.round;
 
 class Entity {
     // Base object class. Can't call it `object` because it conflicts with the `Object` object.
@@ -22,11 +11,6 @@ class Entity {
         this.height = 0;
 
         this.spriteImage = new Image();
-    }
-
-    updateBounds() {
-        this.halfWidth = this.width * .5;
-        this.halfHeight = this.height * .5;
     }
 
     set sprite(image) {
@@ -43,14 +27,6 @@ class Entity {
 
     get sprite() {
         return this.spriteImage;
-    }
-
-    get midX () {
-        return this.halfWidth + this.x;
-    }
-
-    get midY () {
-        return this.halfHeight + this.y;
     }
 
     get top() {
@@ -73,7 +49,7 @@ class Entity {
     }
 
     draw() {
-        canvas.drawImage(this.sprite, this.x, this.y, this.sprite.width, this.sprite.height, 1);
+        canvas.drawImage(this.sprite, round(this.x), round(this.y), this.sprite.width, this.sprite.height, 1);
     }
 
     mousedown() {}
@@ -116,4 +92,4 @@ class Room {
     }
 }
 
-export {Room, Entity, PhysicsEntity, Collision, collideRect, resolveElastic};
+export {Room, Entity};
