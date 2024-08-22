@@ -58,6 +58,10 @@ export default class Canvas {
         this.ctx.fillRect(x, y, w, h)
     }
 
+    strokeRect(x, y, w, h) {
+        this.ctx.strokeRect(x, y, w, h);
+    }
+
     drawLine(x1, y1, x2, y2) {
         const ctx = this.ctx;
         ctx.beginPath();
