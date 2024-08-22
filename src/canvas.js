@@ -28,6 +28,22 @@ export default class Canvas {
         }
     }
 
+    get compositeOperation() {
+        return this.ctx.globalCompositeOperation;
+    }
+
+    set compositeOperation(op) {
+        this.ctx.globalCompositeOperation = op;
+    }
+
+    get filter() {
+        return this.ctx.filter;
+    }
+
+    set filter(fi) {
+        this.ctx.filter = fi;
+    }
+
     updateCanvasSize() {
         const bounds = this.canvas.getBoundingClientRect();
         const width = bounds.width * this.pixelRatio;
