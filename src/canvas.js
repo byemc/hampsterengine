@@ -8,7 +8,7 @@ export default class Canvas {
     }
 
     get height() {
-        return this.canvas.height / this.pixelRatio;
+        return this.canvas.height / this.pixelRatio / this.scale;
     }
     
     set height(h) {
@@ -16,7 +16,7 @@ export default class Canvas {
     }
 
     get width() {
-        return this.canvas.width / this.pixelRatio;
+        return this.canvas.width / this.pixelRatio / this.scale;
     }
     
     set width(w) {
