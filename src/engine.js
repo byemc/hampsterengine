@@ -1,14 +1,12 @@
 
 import AssetStore from "./assetStore.js";
 import splash from "../img/splash_hampster.webp";
+import {engineReadyEvent} from "./events";
 
 class Engine {
     constructor(canvas, registerCanvasToWindow=true) {
         this.canvas = canvas;
-        if (registerCanvasToWindow) {
-            window.engine = this;
-            window.canvas = canvas;
-        }
+
         this.assetStore = new AssetStore();
         this.setSplash(splash);
         this.loading = true;
@@ -29,6 +27,11 @@ class Engine {
         this.cursor = {
             state: 'disabled',
             scale: 1
+        }
+
+        if (registerCanvasToWindow) {
+            window.engine = this;
+            window.canvas = canvas;
         }
     }
 
@@ -75,6 +78,13 @@ class Engine {
         const roomIndex = this.rooms.push(room) - 1
         this.roomTable[name] = roomIndex;
         return roomIndex;
+    }
+
+    initRooms() {
+        for (let room of this.rooms) {
+            console.log('Initialising ', room)
+            room.init();
+        }
     }
 
     getRoomIndex(roomName) {

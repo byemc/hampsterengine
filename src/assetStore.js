@@ -92,7 +92,7 @@ class AssetStore {
         return image;
     }
 
-    addMiniSprite(key, spriteString, size=8) {
+    addMiniSprite(key, spriteString, size=8, renderWithPalette=[]) {
         // Strongly adapted from https://xem.github.io/miniPixelArt/
 
         let pixels = [];
@@ -110,12 +110,12 @@ class AssetStore {
         this.loadMessages.push({
             message: key + ' saved.'
         });
-        this.loaded++;
+        if (renderWithPalette) this.renderMiniSprite(key, renderWithPalette);
+        else this.loaded++;
     }
 
     renderMiniSprite(key, palette=['#000']) {
         // Strongly adapted from https://xem.github.io/miniPixelArt/
-        this.loaded--;
 
         const asset = this.assets[key]
         const size = asset.size;
@@ -138,10 +138,11 @@ class AssetStore {
         this.assets[key].sprite = new Image();
         this.assets[key].sprite.src = a.toDataURL();
 
+        this.assets[key].sprite.onload = _=> this.loaded++;
+
         this.loadMessages.push({
             message: key + ' rendered.'
         });
-        this.loaded++;
     }
 
     addCanvasAsImage(key, canvas) {

@@ -1,3 +1,5 @@
+import Camera from "./camera";
+
 export default class Canvas {
     constructor(canvas) {
         if (typeof (canvas) === 'object') this.canvas = canvas;
@@ -5,6 +7,8 @@ export default class Canvas {
         this.ctx = this.canvas.getContext`2d`;
         this.pixelRatio = window.devicePixelRatio || 1;
         this.scale = 1;
+
+        this.camera = new Camera(this);
     }
 
     get height() {
@@ -64,7 +68,7 @@ export default class Canvas {
         this.ctx.imageSmoothingEnabled = false;
     }
 
-    setScale(scale=1) {
+    setScale(scale=this.scale) {
         this.scale = scale;
         this.ctx.setTransform(
             this.pixelRatio * scale, 0, 0,
@@ -81,10 +85,13 @@ export default class Canvas {
     }
 
     fill(color=this.ctx.fillStyle) {
+        this.ctx.save();
+        this.ctx.translate(-this.camera.x, -this.camera.y);
         const oldColour = this.ctx.fillStyle;
         this.ctx.fillStyle = color;
-        this.ctx.fillRect(0, 0, this.width, this.height);
+        this.ctx.fillRect(this.camera.x, this.camera.y, this.width, this.height);
         this.ctx.fillStyle = oldColour;
+        this.ctx.restore();
     }
 
     fillRect(x, y, w, h) {
@@ -127,9 +134,13 @@ export default class Canvas {
         this.ctx.drawImage(image, x, y, w, h);
     }
 
-    tileImage(image, x, y, w, h, sourceW, sourceH) {
-        for (let i = 0; i < Math.floor(w/sourceW); i++) {
-            this.drawImage(image, x + sourceW * i, y, sourceW, sourceH);
+    tileImage(image, x, y, w, h, sourceW=8, sourceH=8) {
+        for (let i = 0; i < Math.ceil(h/sourceH); i++) {
+            const tY = y + sourceH * i;
+            for (let j = 0; j < Math.ceil(w/sourceW); j++) {
+                const tX = x+sourceW*j;
+                if (!(tX - this.camera.x > this.width || tX - this.camera.y + sourceW < 0) && !(tY - this.camera.y > this.height || tY - this.camera.y + sourceH < 0)) this.drawImage(image, tX, tY, sourceW, sourceH);
+            }
         }
     }
 

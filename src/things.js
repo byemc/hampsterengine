@@ -19,6 +19,8 @@ class Entity {
         this.height = 0;
 
         this.spriteImage = new Image();
+
+        this.collide = true;
     }
 
     get halfWidth() {
@@ -147,7 +149,22 @@ class Entity {
 class Room {
     constructor() {
         this.entities = [];
+        this.entitiesTable = {};
         this.bgColor = 'white';
+    }
+
+    push(entity, id=Math.floor(Math.random()*2147000000).toString()) {
+        if (this.get(id)) this.entities.splice(this.get(id), 1);
+        const entityIndex = this.entities.push(entity) - 1;
+        this.entitiesTable[id] = entityIndex
+    }
+
+    get(id) {
+        return this.entities[this.entitiesTable[id]];
+    }
+
+    init() {
+        // Use this for init code instead of the top level
     }
 
     start() {
@@ -163,9 +180,12 @@ class Room {
     }
 
     draw() {
+        canvas.ctx.save();
+        canvas.ctx.translate(-canvas.camera.x, -canvas.camera.y);
         for (let thing of this.entities) {
             thing.draw();
         }
+        canvas.ctx.restore();
     }
 
     drawGui() {
