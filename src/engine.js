@@ -7,7 +7,7 @@ class Engine {
         this.canvas = canvas;
         if (registerCanvasToWindow) {
             window.engine = this;
-            window.canvas = canvas
+            window.canvas = canvas;
         }
         this.assetStore = new AssetStore();
         this.setSplash(splash);
@@ -16,11 +16,15 @@ class Engine {
         this.running = true;
 
         this.frames = 0;
+        this.physicsFrames = 0;
+        this.lastPhysicsFrame = performance.now();
 
         this.rooms = [];
         this.roomTable = {};
         window.roomTable = this.roomTable;
         this.currentRoomIndex = 0;
+
+        this.debug = 0;
 
         this.cursor = {
             state: 'disabled',

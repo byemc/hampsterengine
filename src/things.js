@@ -1,3 +1,5 @@
+import {abs} from "../../src/js/extras";
+
 const round = Math.round;
 
 class Entity {
@@ -7,10 +9,24 @@ class Entity {
         this.x = 0;
         this.y = 0;
 
+        this.vx = 0; //Velocity
+        this.vy = 0;
+
+        this.ax = 0; //Acceleration
+        this.ay = 0;
+
         this.width = 0;
         this.height = 0;
 
         this.spriteImage = new Image();
+    }
+
+    get halfWidth() {
+        return this.width / 2;
+    }
+
+    get halfHeight() {
+        return this.height / 2;
     }
 
     set sprite(image) {
@@ -45,6 +61,14 @@ class Entity {
         return this.y + this.height;
     }
 
+    get midX() {
+        return this.x + (this.width / 2)
+    }
+
+    get midY() {
+        return this.y + (this.height / 2);
+    }
+
     step () {
     }
 
@@ -60,6 +84,62 @@ class Entity {
 
     mouseupOffThing() {
         // ALWAYS called when the mouse is released
+    }
+
+    checkCollision(other) {
+        // Checks if colliding with another entity. Returns true if colliding.
+
+        return !(
+            this.bottom < other.top ||
+            this.top > other.bottom ||
+            this.right < other.left ||
+            this.left > other.right
+        );
+    }
+
+    resolveCollision(other) {
+        // Move self to no longer be colliding with other, move to the best edge
+        const dx = (other.midX - this.midX) / other.halfWidth;
+        const dy = (other.midY - this.midY) / other.halfHeight;
+
+        // Calculate absolute change
+        const absDX = abs(dx);
+        const absDY = abs(dy);
+
+        let side = 0;
+
+        if (absDX > absDY || abs(absDX - absDY) < .1) {
+            // Coming from the sides or corners
+            if (dx < 0) {
+                // Approaching from the right;
+                this.x = other.right;
+                side = 3;
+            } else {
+                // Approaching from the left
+                this.x = other.left - this.width;
+                side = 1;
+            }
+
+            // Set X velocity to 0
+            this.vx = 0;
+        } else {
+            // Approaching from the top or bottom
+            if (dy < 0) {
+                // Approaching from the bottom
+                this.y = other.bottom;
+                if (this.vy < 0) this.vy = 0;
+                side = 4;
+            } else {
+                // Approaching from the top
+                this.y = other.top - this.height;
+                this.vy = 0;
+                side = 2;
+            }
+
+        }
+
+
+        return side;
     }
 
 }

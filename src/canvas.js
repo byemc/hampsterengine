@@ -1,8 +1,10 @@
 export default class Canvas {
     constructor(canvas) {
-        this.canvas = document.getElementById(canvas);
+        if (typeof (canvas) === 'object') this.canvas = canvas;
+        else this.canvas = document.getElementById(canvas);
         this.ctx = this.canvas.getContext`2d`;
         this.pixelRatio = window.devicePixelRatio || 1;
+        this.scale = 1;
     }
 
     get height() {
@@ -44,6 +46,13 @@ export default class Canvas {
         this.ctx.filter = fi;
     }
 
+    tempFilter(callback=function(){}, filter="") {
+        const oldFilter = this.filter;
+        this.filter = filter
+        callback();
+        this.filter = oldFilter;
+    }
+
     updateCanvasSize() {
         const bounds = this.canvas.getBoundingClientRect();
         const width = bounds.width * this.pixelRatio;
@@ -53,6 +62,14 @@ export default class Canvas {
         this.canvas.height = height;
         this.ctx.setTransform(this.pixelRatio, 0, 0, this.pixelRatio, 0, 0);
         this.ctx.imageSmoothingEnabled = false;
+    }
+
+    setScale(scale=1) {
+        this.scale = scale;
+        this.ctx.setTransform(
+            this.pixelRatio * scale, 0, 0,
+            this.pixelRatio * scale, 0, 0
+        )
     }
 
     setFillColor(color=this.ctx.fillStyle) {
@@ -110,11 +127,16 @@ export default class Canvas {
         this.ctx.drawImage(image, x, y, w, h);
     }
 
+    tileImage(image, x, y, w, h, sourceW, sourceH) {
+        for (let i = 0; i < Math.floor(w/sourceW); i++) {
+            this.drawImage(image, x + sourceW * i, y, sourceW, sourceH);
+        }
+    }
+
     sliceImage(image, x, y, w, h, sx, sy, sw, sh) {
         // Image, X, Y, Width, Height, Source X, Source y, Source Width, Source Height
         this.ctx.drawImage(image, sx, sy, sw, sh, x, y, w, h);
     }
-
 
     drawImageFromCenter(image, x, y, w, h, scale=1) {
         this.ctx.save();
