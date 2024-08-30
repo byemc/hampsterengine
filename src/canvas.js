@@ -138,8 +138,9 @@ export default class Canvas {
         for (let i = 0; i < Math.ceil(h/sourceH); i++) {
             const tY = y + sourceH * i;
             for (let j = 0; j < Math.ceil(w/sourceW); j++) {
-                const tX = x+sourceW*j;
-                if (!(tX - this.camera.x > this.width || tX - this.camera.y + sourceW < 0) && !(tY - this.camera.y > this.height || tY - this.camera.y + sourceH < 0)) this.drawImage(image, tX, tY, sourceW, sourceH);
+                const tX = x + sourceW * j;
+                if (!(tX - this.camera.x > this.width || tX - this.camera.x + sourceW < 0)
+                    && !(tY - this.camera.y > this.height || tY - this.camera.y + sourceH < 0)) this.drawImage(image, tX, tY, sourceW, sourceH);
             }
         }
     }
