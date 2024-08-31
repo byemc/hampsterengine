@@ -19,7 +19,7 @@ export default class Camera {
     }
 
     goTo(x, y) {
-        this.x = Math.round(x) / this.c.scale;
-        this.y = Math.round(y) / this.c.scale;
+        this.x = x;
+        this.y = y;
     }
 }
