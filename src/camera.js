@@ -1,4 +1,3 @@
-
 export default class Camera {
     constructor(canvas) {
         this.c = canvas;
@@ -12,15 +11,15 @@ export default class Camera {
     }
 
     gotoY(y) {
-        this.y = y;
+        this.y = Math.round(y);
     }
 
     gotoX(x) {
-        this.x = x;
+        this.x = Math.round(x);
     }
 
     goTo(x, y) {
-        this.x = x;
-        this.y = y;
+        this.x = Math.round(x) / this.c.scale;
+        this.y = Math.round(y) / this.c.scale;
     }
 }
