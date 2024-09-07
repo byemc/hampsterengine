@@ -125,20 +125,45 @@ class AssetStore {
         a.width = size;
         a.height = size;
         const c = a.getContext`2d`;
+
+        c.save();
+        c.scale(-1, 1);
+
         const pixels = asset.pixels;
         for (let y = 0; y < size; y++) {
             for (let x = 0; x < size; x++) {
-                // if (pixels[y * size * x]) {
-                    c.fillStyle = palette[pixels[y * size + x] - 1];
+                const px = y * size + x ;
+                // console.log(pixels[px]);
+                if (pixels[px]) {
+                    c.fillStyle = palette[pixels[px] - 1];
+                    c.fillRect(x - size, y, 1, 1);
+                }
+            }
+        }
+
+        this.assets[key].flipped = new Image();
+        this.assets[key].flipped.src = a.toDataURL();
+
+        c.restore();
+
+        c.clearRect(0,0,size,size);
+
+        for (let y = 0; y < size; y++) {
+            for (let x = 0; x < size; x++) {
+                const px = y * size + x ;
+                // console.log(pixels[px]);
+                if (pixels[px]) {
+                    c.fillStyle = palette[pixels[px] - 1];
                     c.fillRect(x, y, 1, 1);
-                // }
+                }
             }
         }
 
         this.assets[key].sprite = new Image();
         this.assets[key].sprite.src = a.toDataURL();
-
         this.assets[key].sprite.onload = _=> this.loaded++;
+        this.assets[key].sprite.onerror = e => console.log(e);
+
 
         this.loadMessages.push({
             message: key + ' rendered.'

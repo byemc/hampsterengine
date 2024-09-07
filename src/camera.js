@@ -1,3 +1,5 @@
+import {abs, easeOutCubic, easeOutSine} from "../../src/js/extras";
+
 export default class Camera {
     constructor(canvas) {
         this.c = canvas;
@@ -19,6 +21,7 @@ export default class Camera {
     }
 
     goTo(x, y, t=0) {
+        // console.log("Going to", x, y, t)
         this.goingToX = x;
         this.goingToY = y;
         this.startX = this.x;
@@ -28,12 +31,12 @@ export default class Camera {
     }
 
     step() {
-        const elapsed = Math.min(performance.now() - this.moveStart, this.moveEnd);
-        const end = this.moveEnd - this.moveStart;
-        const pos = (elapsed / end) || 1;
+        let distX = this.goingToX - this.startX;
+        let distY = this.goingToY - this.startY;
 
-        const distX = this.goingToX - this.startX;
-        const distY = this.goingToY - this.startY;
+        const elapsed = Math.min(performance.now() - this.moveStart, this.moveEnd - this.moveStart);
+        const end = this.moveEnd - this.moveStart;
+        const pos = easeOutSine(elapsed / end || 1);
 
         this.x = Math.min(
             this.goingToX,
@@ -43,7 +46,6 @@ export default class Camera {
             this.goingToY,
             this.startY + (distY * pos)
         );
-
-        console.log(elapsed, end, pos, distX, distY)
+        // console.log(this.moveStart, this.moveEnd, elapsed, end, pos, distX, distY)
     }
 }

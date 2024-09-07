@@ -21,6 +21,7 @@ class Entity {
         this.spriteImage = new Image();
 
         this.collide = true;
+        this.collideRects = [{x:0, y:0, w: this.width, h: this.height}]
     }
 
     get halfWidth() {

@@ -150,7 +150,7 @@ class Engine {
             image.width, image.height, 1);
 
         this.canvas.setFillColor('white');
-        if (this.assetStore.loaded === this.assetStore.size) {
+        if (this.assetStore.loaded >= this.assetStore.size) {
             // this.canvas.drawText('LOADED', 10, this.canvas.height - 10, {})
             setTimeout(_=>{
                 this.loading = false;
@@ -161,7 +161,7 @@ class Engine {
             this.canvas.setFillColor('white');
             for (let i = 0; i < this.assetStore.loadMessages.length; i++) {
                 if (this.assetStore.loadMessages[i].error) this.canvas.setFillColor('red');
-                this.canvas.drawText(this.assetStore.loadMessages[i].message, 0, (i*16), {
+                this.canvas.drawText(this.assetStore.loadMessages[i].message, 0, (i*8), {
                     textBaseline: 'top'
                 })
             }
