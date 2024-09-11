@@ -34,8 +34,8 @@ export default class Camera {
         let distX = this.goingToX - this.startX;
         let distY = this.goingToY - this.startY;
 
-        const elapsed = Math.min(performance.now() - this.moveStart, this.moveEnd - this.moveStart);
         const end = this.moveEnd - this.moveStart;
+        const elapsed = Math.min(performance.now() - this.moveStart, end);
         const pos = easeOutSine(elapsed / end || 1);
 
         this.x = Math.min(

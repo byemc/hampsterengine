@@ -98,8 +98,8 @@ class AssetStore {
         let pixels = [];
         spriteString.replace(/./g,
             character => {
-                var characterCode = character.charCodeAt();
-                    pixels.push(characterCode&7); // Gets the last three bits
+                const characterCode = character.charCodeAt();
+                pixels.push(characterCode&7); // Gets the last three bits
                     pixels.push((characterCode>>3)&7) // Gets the first three bits
             });
 
